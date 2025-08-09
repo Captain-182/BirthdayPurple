@@ -16,6 +16,7 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
+        overflow: hidden;
     }
     h1 {
         font-family: 'Pacifico', cursive;
@@ -35,6 +36,13 @@
         margin-top: 20px;
         box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
+    canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        z-index: 9999;
+    }
 </style>
 </head>
 <body>
@@ -44,12 +52,75 @@
 May your dreams shine brighter than the candles on your cake. 💜</p>
 <img src="https://i.imgur.com/xXzZ8oQ.png" alt="Birthday Cake">
 
+<canvas id="confetti"></canvas>
+
 <script>
-    // Simple password protection
-    var password = "purpleparty"; // change this password
+    // Password protection
+    var password = "purpleparty";
     var entered = prompt("Please enter the birthday password:");
     if (entered !== password) {
         document.body.innerHTML = "<h1 style='color:white;text-align:center;margin-top:20%;'>Access Denied 🚫</h1>";
+    } else {
+        startConfetti();
+    }
+
+    // Confetti script
+    function startConfetti() {
+        var canvas = document.getElementById('confetti');
+        var ctx = canvas.getContext('2d');
+        var W = window.innerWidth;
+        var H = window.innerHeight;
+        canvas.width = W;
+        canvas.height = H;
+
+        var confettis = [];
+        var colors = ["#ff0a54", "#ff477e", "#ff7096", "#ff85a1", "#fbb1bd", "#c77dff", "#9d4edd", "#7b2cbf"];
+
+        for (var i = 0; i < 150; i++) {
+            confettis.push({
+                x: Math.random() * W,
+                y: Math.random() * H,
+                r: Math.random() * 6 + 4,
+                d: Math.random() * 100,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                tilt: Math.random() * 10 - 10
+            });
+        }
+
+        function drawConfetti() {
+            ctx.clearRect(0, 0, W, H);
+            for (var i = 0; i < confettis.length; i++) {
+                var c = confettis[i];
+                ctx.beginPath();
+                ctx.fillStyle = c.color;
+                ctx.moveTo(c.x + c.tilt + c.r / 3, c.y);
+                ctx.lineTo(c.x + c.tilt, c.y + c.r / 3);
+                ctx.lineTo(c.x + c.tilt - c.r / 3, c.y);
+                ctx.lineTo(c.x + c.tilt, c.y - c.r / 3);
+                ctx.fill();
+            }
+            update();
+        }
+
+        function update() {
+            for (var i = 0; i < confettis.length; i++) {
+                var c = confettis[i];
+                c.y += Math.cos(c.d) + 1 + c.r / 2;
+                c.x += Math.sin(0.01) * 2;
+                if (c.y > H) {
+                    confettis[i] = {
+                        x: Math.random() * W,
+                        y: -10,
+                        r: c.r,
+                        d: c.d,
+                        color: c.color,
+                        tilt: Math.random() * 10 - 10
+                    };
+                }
+            }
+        }
+
+        setInterval(drawConfetti, 20);
     }
 </script>
 
