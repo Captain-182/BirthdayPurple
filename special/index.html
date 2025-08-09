@@ -47,24 +47,25 @@
 </head>
 <body>
 
-<h1>🎉 Happy Birthday, Princess! 🎂</h1>
-<p>Wishing you endless joy, laughter, and beautiful memories today and always.  
-May your dreams shine brighter than the candles on your cake. 💜</p>
-<img src="https://i.imgur.com/xXzZ8oQ.png" alt="Birthday Cake">
-
 <canvas id="confetti"></canvas>
 
+<div id="content" style="display:none;">
+    <h1>🎉 Happy Birthday, Princess! 🎂</h1>
+    <p>Wishing you endless joy, laughter, and beautiful memories today and always.  
+    May your dreams shine brighter than the candles on your cake. 💜</p>
+    <img src="https://i.imgur.com/xXzZ8oQ.png" alt="Birthday Cake">
+</div>
+
 <script>
-    // Password protection
     var password = "purpleparty";
     var entered = prompt("Please enter the birthday password:");
     if (entered !== password) {
         document.body.innerHTML = "<h1 style='color:white;text-align:center;margin-top:20%;'>Access Denied 🚫</h1>";
     } else {
+        document.getElementById('content').style.display = 'block';
         startConfetti();
     }
 
-    // Confetti script
     function startConfetti() {
         var canvas = document.getElementById('confetti');
         var ctx = canvas.getContext('2d');
@@ -106,7 +107,6 @@ May your dreams shine brighter than the candles on your cake. 💜</p>
             for (var i = 0; i < confettis.length; i++) {
                 var c = confettis[i];
                 c.y += Math.cos(c.d) + 1 + c.r / 2;
-                c.x += Math.sin(0.01) * 2;
                 if (c.y > H) {
                     confettis[i] = {
                         x: Math.random() * W,
